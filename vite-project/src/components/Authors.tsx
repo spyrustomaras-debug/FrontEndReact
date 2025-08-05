@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { fetchAuthors, fetchAuthor, updateAuthor } from "../features/authors/authorSlice";
 import styled from "styled-components";
 import axios from "axios";
+import CreateAuthorForm from "./CreateAuthorForm";
 
 const Container = styled.div`
   max-width: 800px;
@@ -254,10 +255,6 @@ const Authors = () => {
   
   
   
-  const handleDelete = (id: number) => {
-    // Logic for delete, e.g., dispatch a redux action or call API
-    console.log("Delete author with id:", id);
-  };
 
   return (
     <Container>
@@ -279,7 +276,7 @@ const Authors = () => {
         ))}
       </AuthorList>
 
-      {modalOpen && (
+{modalOpen && (
         <ModalBackground>
           <ModalContent>
             <h2>Confirm Delete</h2>
@@ -295,7 +292,7 @@ const Authors = () => {
             </ModalButtons>
           </ModalContent>
         </ModalBackground>
-      )}
+)}
 
 {viewModalOpen && (
   <ModalBackground>
