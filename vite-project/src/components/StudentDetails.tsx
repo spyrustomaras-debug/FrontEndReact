@@ -2,7 +2,7 @@
 import React from "react";
 import { useStudent } from "../hooks/useStudent";
 import { useParams, useNavigate } from "react-router-dom";
-
+import { useMemo } from "react";
 
 const StudentDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,13 +10,17 @@ const StudentDetail: React.FC = () => {
   const navigate = useNavigate();
   const { data, isLoading, error } = useStudent(studentId);
 
+  const formattedName = useMemo(() => {
+    return data.name.toUpperCase(); // or some formatting logic
+  }, [data.name]);
+
   if (isLoading) return <p>Loading...</p>;
   if (error instanceof Error) return <p>Error: {error.message}</p>;
 
   return (
     <div>
       <h2>Student Detail</h2>
-      <p><strong>Name:</strong> {data.name}</p>
+      <p><strong>Name:</strong> {data.name} :{formattedName}</p>
       <p><strong>ID:</strong> {data.id}</p>
       {/* Add more fields if available */}
 
