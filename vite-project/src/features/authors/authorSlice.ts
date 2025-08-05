@@ -34,6 +34,14 @@ export const fetchAuthors = createAsyncThunk<Author[]>(
     }
   );
 
+  export const updateAuthor = createAsyncThunk<Author, { id: number; data: Partial<Author> }>(
+    'authors/update',
+    async ({ id, data }) => {
+      const response = await axios.put(`http://localhost:8000/api/authors/${id}/`, data);
+      return response.data;
+    }
+  );
+
   const authorsSlice = createSlice({
     name: "authors",
     initialState,
@@ -55,6 +63,13 @@ export const fetchAuthors = createAsyncThunk<Author[]>(
         .addCase(fetchAuthor.fulfilled, (state, action) => {
             state.selectedAuthor = action.payload;
         })
+        .addCase(updateAuthor.fulfilled, (state, action) => {
+            const index = state.data.findIndex((a) => a.id === action.payload.id);
+            if (index !== -1) {
+              state.data[index] = action.payload;
+            }
+            state.selectedAuthor = null; // reset after update
+          })
     },
   });
   

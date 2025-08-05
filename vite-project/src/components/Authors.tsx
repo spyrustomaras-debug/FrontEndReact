@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { fetchAuthors, fetchAuthor } from "../features/authors/authorSlice";
+import { fetchAuthors, fetchAuthor, updateAuthor } from "../features/authors/authorSlice";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -164,6 +164,10 @@ const Authors = () => {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const { selectedAuthor, loading: viewLoading, error: viewError } = useAppSelector((state) => state.authors);
 
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [updateName, setUpdateName] = useState("");
+  const [updating, setUpdating] = useState(false);
+  const [updateError, setUpdateError] = useState<string | null>(null);
 
     // Open modal with selected author ID
     const handleDeleteClick = (id: number) => {
@@ -177,6 +181,11 @@ const Authors = () => {
       setModalOpen(false);
       setAuthorToDelete(null);
       setDeleteError(null);
+  };
+
+  const handleUpdate = (id: number) => {
+    dispatch(fetchAuthor(id));
+    setUpdateModalOpen(true);
   };
 
   // Confirm deletion: call backend, refresh list on success
@@ -198,13 +207,23 @@ const Authors = () => {
   };
 
   useEffect(() => {
+    if (selectedAuthor) {
+      setUpdateName(selectedAuthor.name);
+    }
+  }, [selectedAuthor]);
+  
+
+  useEffect(() => {
     dispatch(fetchAuthors());
   }, [dispatch]);
 
-  const handleUpdate = (id: number) => {
-    // Logic for update, e.g., navigate to edit page or open modal
-    console.log("Update author with id:", id);
-  };
+  useEffect(() => {
+    if (selectedAuthor) {
+      setUpdateName(selectedAuthor.name);
+    }
+  }, [selectedAuthor]);
+
+
 
   const handleView = (id: number) => {
     setViewModalOpen(true);
@@ -216,6 +235,22 @@ const Authors = () => {
     setViewModalOpen(false);
   
   };
+
+  const handleUpdateSubmit = async () => {
+    if (!selectedAuthor) return;
+    setUpdating(true);
+    setUpdateError(null);
+    try {
+      await dispatch(updateAuthor({ id: selectedAuthor.id, data: { name: updateName } }));
+      setUpdateModalOpen(false);
+      dispatch(fetchAuthors()); // Refresh the list
+    } catch (err: any) {
+      setUpdateError("Failed to update author.");
+    } finally {
+      setUpdating(false);
+    }
+  };
+  
   
   
   
@@ -285,6 +320,39 @@ const Authors = () => {
     </ModalContent>
   </ModalBackground>
 )}
+
+{updateModalOpen && (
+  <ModalBackground>
+    <ModalContent>
+      <h2>Update Author</h2>
+      {viewLoading || !selectedAuthor ? (
+        <StatusText>Loading...</StatusText>
+      ) : (
+        <>
+          <label>
+            <strong>Name:</strong>
+            <input
+              type="text"
+              value={updateName}
+              onChange={(e) => setUpdateName(e.target.value)}
+              style={{ width: "100%", padding: "0.5rem", marginTop: "0.5rem", borderRadius: "4px", border: "1px solid #ccc" }}
+            />
+          </label>
+          {updateError && <StatusText error>{updateError}</StatusText>}
+          <ModalButtons>
+            <CancelButton onClick={() => setUpdateModalOpen(false)} disabled={updating}>
+              Cancel
+            </CancelButton>
+            <UpdateButton onClick={handleUpdateSubmit} disabled={updating}>
+              {updating ? "Updating..." : "Update"}
+            </UpdateButton>
+          </ModalButtons>
+        </>
+      )}
+    </ModalContent>
+  </ModalBackground>
+)}
+
 
 
     </Container>
