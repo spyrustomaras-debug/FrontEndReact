@@ -6,12 +6,16 @@ interface AuthorState {
   data: Author[];
   loading: boolean;
   error: string | null;
+  selectedAuthor: Author | null; // 👈 add this
+
 }
 
 const initialState: AuthorState = {
   data: [],
   loading: false,
   error: null,
+  selectedAuthor: null, // 👈 add this
+
 };
 
 export const fetchAuthors = createAsyncThunk<Author[]>(
@@ -22,6 +26,13 @@ export const fetchAuthors = createAsyncThunk<Author[]>(
     }
   );
 
+  export const fetchAuthor = createAsyncThunk<Author, number>(
+    "authors/fetchOne",
+    async (id) => {
+      const response = await axios.get(`http://localhost:8000/api/authors/${id}/`);
+      return response.data;
+    }
+  );
 
   const authorsSlice = createSlice({
     name: "authors",
@@ -40,7 +51,10 @@ export const fetchAuthors = createAsyncThunk<Author[]>(
         .addCase(fetchAuthors.rejected, (state, action) => {
           state.loading = false;
           state.error = action.error.message ?? "Failed to fetch authors";
-        });
+        })
+        .addCase(fetchAuthor.fulfilled, (state, action) => {
+            state.selectedAuthor = action.payload;
+        })
     },
   });
   

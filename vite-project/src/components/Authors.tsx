@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { fetchAuthors } from "../features/authors/authorSlice";
+import { fetchAuthors, fetchAuthor } from "../features/authors/authorSlice";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -154,11 +154,16 @@ const Authors = () => {
   const dispatch = useAppDispatch();
   const { data, loading, error } = useAppSelector((state) => state.authors);
 
+
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [authorToDelete, setAuthorToDelete] = useState<number | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const { selectedAuthor, loading: viewLoading, error: viewError } = useAppSelector((state) => state.authors);
+
 
     // Open modal with selected author ID
     const handleDeleteClick = (id: number) => {
@@ -202,9 +207,17 @@ const Authors = () => {
   };
 
   const handleView = (id: number) => {
-    // Example: show alert or navigate to author details page
-    console.log("View author with id:", id);
+    setViewModalOpen(true);
+    dispatch(fetchAuthor(id));
   };
+  
+
+  const closeViewModal = () => {
+    setViewModalOpen(false);
+  
+  };
+  
+  
   
   const handleDelete = (id: number) => {
     // Logic for delete, e.g., dispatch a redux action or call API
@@ -248,6 +261,32 @@ const Authors = () => {
           </ModalContent>
         </ModalBackground>
       )}
+
+{viewModalOpen && (
+  <ModalBackground>
+    <ModalContent>
+      <h2>Author Details</h2>
+      {viewLoading ? (
+        <StatusText>Loading...</StatusText>
+      ) : viewError ? (
+        <StatusText error>{viewError}</StatusText>
+      ) : selectedAuthor ? (
+        <div>
+          <p><strong>ID:</strong> {selectedAuthor.id}</p>
+          <p><strong>Name:</strong> {selectedAuthor.name}</p>
+          {/* Add more fields here if needed */}
+        </div>
+      ) : (
+        <StatusText>No author data available.</StatusText>
+      )}
+      <ModalButtons>
+        <CancelButton onClick={closeViewModal}>Close</CancelButton>
+      </ModalButtons>
+    </ModalContent>
+  </ModalBackground>
+)}
+
+
     </Container>
   );
   
