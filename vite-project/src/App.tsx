@@ -1,5 +1,6 @@
 import React from "react";
 import ProfileList from "./components/ProfileList";
+import styled from "styled-components";
 
 const App: React.FC = () => {
   return (
