@@ -252,10 +252,6 @@ const Authors = () => {
     }
   };
   
-  
-  
-  
-
   return (
     <Container>
       <Title>Authors</Title>

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { fetchProfiles } from "../features/profiles/profileSlice";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import styled from "styled-components";
-
+import ProfileItem from "./ProfileItem";
 
 const Container = styled.div`
   padding: 2rem;
@@ -21,24 +21,6 @@ const List = styled.ul`
   padding: 0;
 `;
 
-const ListItem = styled.li`
-  background-color: #f5f5f5;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-`;
-
-const UserName = styled.span`
-  font-weight: bold;
-  font-size: 1.2rem;
-`;
-
-const Bio = styled.p`
-  margin: 0.5rem 0 0;
-  color: #555;
-`;
-
 const ErrorMessage = styled.p`
   color: red;
   text-align: center;
@@ -47,7 +29,6 @@ const ErrorMessage = styled.p`
 const LoadingMessage = styled.p`
   text-align: center;
 `;
-
 
 const ProfileList: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -62,16 +43,13 @@ const ProfileList: React.FC = () => {
 
   return (
     <Container>
-    <Heading>User Profiles</Heading>
-    <List>
-      {data.map((profile) => (
-        <ListItem key={profile.id}>
-          <UserName>{profile.user_name}</UserName>
-          <Bio>{profile.bio}</Bio>
-        </ListItem>
-      ))}
-    </List>
-  </Container>
+      <Heading>User Profiles</Heading>
+      <List>
+        {data.map((profile) => (
+          <ProfileItem key={profile.id} {...profile} />
+        ))}
+      </List>
+    </Container>
   );
 };
 
