@@ -8,6 +8,8 @@ const Navbar = () => {
         <li><Link to="/profiles">Profiles</Link></li>
         <li><Link to="/authors">Authors</Link></li>
         <li><Link to="/students">Students</Link></li>
+        <li><Link to={"/login"}/>Login</li>
+        
         <li>
           <Link to="/books/new">
             <button style={{ padding: "0.4rem 0.8rem", fontWeight: "bold", cursor: "pointer" }}>

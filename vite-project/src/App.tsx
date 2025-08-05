@@ -7,6 +7,9 @@ import Authors from "./components/Authors";
 import CreateBookForm from "./components/CreateBookForm"; // 👈 your book form
 import StudentList from "./components/StudentList";
 import StudentDetails from "./components/StudentDetails";
+import Login from "./components/Login";
+import ProtectedRoute from "./components/ProtectedRoute";  // import your ProtectedRoute
+
 
 
 const App: React.FC = () => {
@@ -17,9 +20,16 @@ const App: React.FC = () => {
         <Route path="/profiles" element={<ProfileList />} />
         <Route path="/authors" element={<Authors />} />
         <Route path="/books/new" element={<CreateBookForm />} /> {/* 👈 new route */}
-        <Route path="/students" element={<StudentList/>}/>
-        <Route path="/students/:id" element={<StudentDetails />} />
-
+        {/* Wrap StudentList with ProtectedRoute */}
+        <Route
+          path="/students"
+          element={
+            <ProtectedRoute>
+              <StudentList />
+            </ProtectedRoute>
+          }
+        />        <Route path="/students/:id" element={<StudentDetails />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
