@@ -5,6 +5,9 @@ import Navbar from "./components/Navbar";
 import ProfileList from "./components/ProfileList";
 import Authors from "./components/Authors";
 import CreateBookForm from "./components/CreateBookForm"; // 👈 your book form
+import StudentList from "./components/StudentList";
+import StudentDetails from "./components/StudentDetails";
+
 
 const App: React.FC = () => {
   return (
@@ -14,6 +17,9 @@ const App: React.FC = () => {
         <Route path="/profiles" element={<ProfileList />} />
         <Route path="/authors" element={<Authors />} />
         <Route path="/books/new" element={<CreateBookForm />} /> {/* 👈 new route */}
+        <Route path="/students" element={<StudentList/>}/>
+        <Route path="/students/:id" element={<StudentDetails />} />
+
       </Routes>
     </BrowserRouter>
   );
