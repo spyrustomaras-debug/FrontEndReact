@@ -1,13 +1,14 @@
 import React from "react";
 import ProfileList from "./components/ProfileList";
-import styled from "styled-components";
+import Navbar from './components/Navbar';
+import { Route, Routes } from "react-router-dom";
+import { BrowserRouter } from 'react-router-dom';
 
 const App: React.FC = () => {
   return (
-    <div>
-      <h1>My Django + React App</h1>
-      <ProfileList />
-    </div>
+    <BrowserRouter>
+      <Navbar />
+    </BrowserRouter>
   );
 };
 
